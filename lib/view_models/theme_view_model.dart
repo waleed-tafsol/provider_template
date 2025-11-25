@@ -1,26 +1,40 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../../services/storage_service.dart';
+import '../utills/enums.dart';
+import '../utills/shared_pref .dart';
 
 class ThemeViewModel extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.light;
 
   ThemeMode get themeMode => _themeMode;
-  final StorageService _storageService = StorageService();
+  final SharedPref _sharedPref = SharedPref();
+
   ThemeViewModel() {
     _loadTheme();
   }
 
-  void _loadTheme() async {
-    _themeMode = _storageService.getThemeMode();
-    notifyListeners();
+  void _loadTheme() {
+    try {
+      final themeMode = _sharedPref.readObject(
+        SharedPreferencesKeys.themeModeKey.keyText,
+      );
+      _themeMode = themeMode;
+      notifyListeners();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error loading theme: $e');
+      }
+      _themeMode = ThemeMode.system; // Default fallback
+    }
   }
 
-  void setThemeMode(ThemeMode themeMode) async {
+  void setThemeMode(ThemeMode themeMode) {
     if (_themeMode == themeMode) return;
-
     _themeMode = themeMode;
-    await _storageService.saveThemeMode(themeMode);
+    _sharedPref.saveObject(
+      SharedPreferencesKeys.themeModeKey.keyText,
+      themeMode,
+    );
     notifyListeners();
   }
 

@@ -14,7 +14,6 @@ class AppInit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ScreenUtil.init(context);
     final ThemeMode themeMode = context.watch<ThemeViewModel>().themeMode;
     return ScreenUtilInit(
         designSize: getDesignSize(context: context),
@@ -24,7 +23,7 @@ class AppInit extends StatelessWidget {
       builder: (_, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Beauty Points',
+          title: 'Provider Sample App',
           initialRoute: '/',
           onGenerateRoute: RouteGenerator.generateRoute,
           themeMode: themeMode,
