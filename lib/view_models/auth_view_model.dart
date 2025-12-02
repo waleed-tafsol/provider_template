@@ -2,29 +2,23 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:provider_sample_app/repositories/auth_repository.dart';
-import 'package:provider_sample_app/services/api_base_helper.dart';
-import 'package:provider_sample_app/services/auth_service.dart';
-import 'package:provider_sample_app/utills/shared_pref.dart';
 
 import '../models/requests/sign_in_request.dart';
 import '../models/responses/auth_response.dart';
 
 class AuthViewModel extends ChangeNotifier {
+  AuthViewModel({required AuthRepository authRepository})
+    : _authRepository = authRepository;
   bool _isLoading = false;
-  late final AuthRepository _authApiServices;
+  final AuthRepository _authRepository;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   AuthResponse _authResponse = AuthResponse();
 
-  AuthViewModel() {
-    _authApiServices = AuthService(
-      apiClient: ApiBaseHelper(),
-      sharedPref: SharedPref(),
-    );
-  }
-
   TextEditingController get emailController => _emailController;
+
   TextEditingController get passwordController => _passwordController;
+
   AuthResponse get authResponse => _authResponse;
 
   void setAuthResponse(AuthResponse response) {
@@ -49,13 +43,13 @@ class AuthViewModel extends ChangeNotifier {
         deviceType: Platform.isAndroid ? 'android' : 'ios',
       );
 
-      final AuthResponse response = await _authApiServices.signInApi(
+      final AuthResponse response = await _authRepository.signInApi(
         signInRequest: signInRequest,
       );
-      
+
       setAuthResponse(response);
       setLoading(false);
-      
+
       return response.isSuccess == true;
     } catch (e) {
       // Set error response
