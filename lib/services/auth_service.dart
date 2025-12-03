@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:provider_sample_app/repositories/auth_repository.dart';
-import 'package:provider_sample_app/utills/shared_pref.dart';
-
+import 'package:provider_sample_app/utills/secure_storage_service.dart';
 import '../models/requests/sign_in_request.dart';
 import '../models/responses/auth_response.dart';
 import '../utills/enums.dart';
@@ -11,13 +9,13 @@ import 'api_base_helper.dart';
 
 class AuthService implements AuthRepository {
   final ApiBaseHelper _apiClient;
-  final SharedPref _sharedPref;
+  final SecureStorage _secureStorage;
 
   AuthService({
     required ApiBaseHelper apiClient,
-    required SharedPref sharedPref,
+    required SecureStorage secureStorage,
   }) : _apiClient = apiClient,
-       _sharedPref = sharedPref;
+       _secureStorage = secureStorage;
 
   @override
   Future<AuthResponse> signInApi({required SignInRequest signInRequest}) async {
@@ -28,16 +26,13 @@ class AuthService implements AuthRepository {
         requestBody: signInRequest,
         params: '',
       );
-      
+
       // Check HTTP status code
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final parsed = json.decode(response.body);
         AuthResponse authResponse = AuthResponse.fromJson(parsed);
         if (authResponse.isSuccess == true) {
-          _sharedPref.saveString(
-            SharedPreferencesKeys.accessTokenKey.keyText,
-            authResponse.data?.clientToken ?? '',
-          );
+          _secureStorage.saveAuthToken(authResponse.data?.clientToken ?? '');
         }
         return authResponse;
       } else {

@@ -6,11 +6,17 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
 
 import '../utills/enums.dart';
+import '../utills/secure_storage_service.dart';
 import '../utills/shared_pref.dart';
 
 class ApiBaseHelper {
   String? autToken;
-  final SharedPref _sharedPref = SharedPref();
+  // final SharedPref _sharedPref = SharedPref();
+  final SecureStorage _secureStorage;
+
+  ApiBaseHelper({required SecureStorage secureStorage})
+    : _secureStorage = secureStorage;
+
   Future<dynamic> httpRequest({
     required EndPoints endPoint,
     required String requestType,
@@ -18,9 +24,7 @@ class ApiBaseHelper {
     required String params,
     String? imagePath,
   }) async {
-    autToken = _sharedPref.readString(
-      SharedPreferencesKeys.accessTokenKey.keyText,
-    );
+    autToken = _secureStorage.cachedAuthToken;
     try {
       switch (requestType) {
         case 'GET':
@@ -83,13 +87,10 @@ class ApiBaseHelper {
   }
 
   Map<String, String> getHeaders() {
-
     Map<String, String> headers = {};
     headers.putIfAbsent('Content-Type', () => 'application/json');
     headers.putIfAbsent('Accept', () => 'application/json');
-    headers.putIfAbsent('Authorization', () => 'Bearer ${autToken?? ''}');
+    headers.putIfAbsent('Authorization', () => 'Bearer ${autToken ?? ''}');
     return headers;
   }
-
-
 }

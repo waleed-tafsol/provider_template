@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,19 +10,22 @@ import 'package:provider_sample_app/utills/shared_pref.dart';
 import 'package:provider_sample_app/view_models/auth_view_model.dart';
 import 'package:provider_sample_app/view_models/theme_view_model.dart';
 
+import 'utills/secure_storage_service.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GoogleFonts.pendingFonts([GoogleFonts.montserratTextTheme()]);
   await ScreenUtil.ensureScreenSize();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  await SharedPref.init();
+  // await SharedPref.init();
 
   // Initialize dependencies
-  final sharedPref = SharedPref();
-  final apiBaseHelper = ApiBaseHelper();
+  final secureStorage = SecureStorage();
+  await secureStorage.init();
+  final apiBaseHelper = ApiBaseHelper(secureStorage: secureStorage);
   final authService = AuthService(
     apiClient: apiBaseHelper,
-    sharedPref: sharedPref,
+    secureStorage: secureStorage,
   );
 
   runApp(
