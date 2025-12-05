@@ -9,13 +9,9 @@ import 'api_base_helper.dart';
 
 class AuthService implements AuthRepository {
   final ApiBaseHelper _apiClient;
-  final SecureStorage _secureStorage;
+  final SecureStorage _secureStorage = SecureStorage();
 
-  AuthService({
-    required ApiBaseHelper apiClient,
-    required SecureStorage secureStorage,
-  }) : _apiClient = apiClient,
-       _secureStorage = secureStorage;
+  AuthService({required ApiBaseHelper apiClient}) : _apiClient = apiClient;
 
   @override
   Future<AuthResponse> signInApi({required SignInRequest signInRequest}) async {
@@ -32,7 +28,10 @@ class AuthService implements AuthRepository {
         final parsed = json.decode(response.body);
         AuthResponse authResponse = AuthResponse.fromJson(parsed);
         if (authResponse.isSuccess == true) {
-          _secureStorage.saveAuthToken(authResponse.data?.clientToken ?? '');
+          _secureStorage.saveSecureString(
+            key: '',
+            value: authResponse.data?.clientToken ?? '',
+          );
         }
         return authResponse;
       } else {

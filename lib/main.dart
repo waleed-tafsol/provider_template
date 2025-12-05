@@ -20,12 +20,10 @@ Future<void> main() async {
   await SharedPref.init();
 
   // Initialize dependencies
-  final secureStorage = SecureStorage();
-  await secureStorage.init();
-  final apiBaseHelper = ApiBaseHelper(secureStorage: secureStorage);
+  await SecureStorage().init();
+  final apiBaseHelper = ApiBaseHelper();
   final authService = AuthService(
     apiClient: apiBaseHelper,
-    secureStorage: secureStorage,
   );
 
   runApp(

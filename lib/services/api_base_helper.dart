@@ -13,10 +13,9 @@ import '../utils/secure_storage_service.dart';
 class ApiBaseHelper {
   String? autToken;
   // final SharedPref _sharedPref = SharedPref();
-  final SecureStorage _secureStorage;
+  final SecureStorage _secureStorage = SecureStorage();
 
-  ApiBaseHelper({required SecureStorage secureStorage})
-    : _secureStorage = secureStorage;
+
 
   Future<dynamic> httpRequest({
     required EndPoints endPoint,
