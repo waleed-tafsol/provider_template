@@ -12,9 +12,10 @@ import '../utils/secure_storage_service.dart';
 class ApiBaseHelper {
   String? autToken;
   // final SharedPref _sharedPref = SharedPref();
-  final SecureStorage _secureStorage = SecureStorage();
+  final SecureStorage _secureStorage;
 
-
+  ApiBaseHelper({required SecureStorage secureStorage})
+    : _secureStorage = secureStorage;
 
   Future<dynamic> httpRequest({
     required EndPoints endPoint,
@@ -23,7 +24,7 @@ class ApiBaseHelper {
     required String params,
     String? imagePath,
   }) async {
-   // autToken = _secureStorage.cachedAuthToken;
+    autToken = _secureStorage.cachedAuthToken;
     try {
       http.Response? response;
       http.StreamedResponse? streamedResponse;

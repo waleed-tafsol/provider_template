@@ -6,10 +6,6 @@ import 'package:provider_sample_app/route_generator.dart';
 import 'package:provider_sample_app/utils/color_constant.dart';
 import 'package:provider_sample_app/view_models/auth_view_model.dart';
 
-import '../utils/color_constant.dart';
-
-
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 

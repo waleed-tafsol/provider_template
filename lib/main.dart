@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:provider_sample_app/app_init.dart';
 import 'package:provider_sample_app/services/api_base_helper.dart';
 import 'package:provider_sample_app/services/auth_service.dart';
+import 'package:provider_sample_app/utils/shared_pref.dart';
 import 'package:provider_sample_app/view_models/auth_view_model.dart';
 import 'package:provider_sample_app/view_models/theme_view_model.dart';
 
@@ -16,12 +17,15 @@ Future<void> main() async {
   // await GoogleFonts.pendingFonts([GoogleFonts.montserratTextTheme()]);
   await ScreenUtil.ensureScreenSize();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  // await SharedPref.init();
+  await SharedPref.init();
 
   // Initialize dependencies
   await SecureStorage().init();
-  final apiBaseHelper = ApiBaseHelper();
+  final apiBaseHelper = ApiBaseHelper(
+    secureStorage: SecureStorage(), 
+  );
   final authService = AuthService(
+    secureStorage: SecureStorage(),
     apiClient: apiBaseHelper,
   );
 
