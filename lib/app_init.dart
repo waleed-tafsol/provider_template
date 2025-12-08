@@ -17,10 +17,10 @@ class AppInit extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeMode themeMode = context.watch<ThemeViewModel>().themeMode;
     return ScreenUtilInit(
-        designSize: getDesignSize(context: context),
-        ensureScreenSize: true,
-        minTextAdapt: true,
-        splitScreenMode: true,
+      designSize: getDesignSize(context: context),
+      ensureScreenSize: true,
+      minTextAdapt: true,
+      splitScreenMode: true,
       builder: (_, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -32,7 +32,7 @@ class AppInit extends StatelessWidget {
           darkTheme: AppTheme.darkTheme,
           builder: EasyLoading.init(),
         );
-      }
+      },
     );
   }
 }

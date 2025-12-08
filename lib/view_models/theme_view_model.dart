@@ -11,7 +11,7 @@ class ThemeViewModel extends ChangeNotifier {
 
   ThemeViewModel() {
     _loadTheme();
-  } 
+  }
 
   void _loadTheme() {
     try {

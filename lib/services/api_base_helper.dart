@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
+import 'dart:io' as io;
 
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
 
+import '../exceptions/app_exception.dart';
 import '../utils/enums.dart';
+import '../utils/error_handler.dart';
 import '../utils/secure_storage_service.dart';
-
-
 
 class ApiBaseHelper {
   String? autToken;
@@ -24,35 +23,66 @@ class ApiBaseHelper {
     required String params,
     String? imagePath,
   }) async {
-    autToken = _secureStorage.cachedAuthToken;
+   // autToken = _secureStorage.cachedAuthToken;
     try {
+      http.Response? response;
+      http.StreamedResponse? streamedResponse;
+
       switch (requestType) {
         case 'GET':
-          final responseJson = await http.get(
-            Uri.parse(BaseUrls.api.url + endPoint.url + params),
-            headers: getHeaders(),
-          );
-          return responseJson;
+          response = await http
+              .get(
+                Uri.parse(BaseUrls.api.url + endPoint.url + params),
+                headers: getHeaders(),
+              )
+              .timeout(
+                const Duration(seconds: 30),
+                onTimeout: () {
+                  throw const TimeoutException();
+                },
+              );
+          break;
         case 'POST':
-          final responseJson = await http.post(
-            Uri.parse(BaseUrls.api.url + endPoint.url),
-            headers: getHeaders(),
-            body: jsonEncode(requestBody),
-          );
-          return responseJson;
+          response = await http
+              .post(
+                Uri.parse(BaseUrls.api.url + endPoint.url),
+                headers: getHeaders(),
+                body: jsonEncode(requestBody),
+              )
+              .timeout(
+                const Duration(seconds: 30),
+                onTimeout: () {
+                  throw const TimeoutException();
+                },
+              );
+          break;
         case 'PUT':
-          final responseJson = await http.put(
-            Uri.parse(BaseUrls.api.url + endPoint.url + params),
-            headers: getHeaders(),
-            body: requestBody != '' ? jsonEncode(requestBody) : null,
-          );
-          return responseJson;
+          response = await http
+              .put(
+                Uri.parse(BaseUrls.api.url + endPoint.url + params),
+                headers: getHeaders(),
+                body: requestBody != '' ? jsonEncode(requestBody) : null,
+              )
+              .timeout(
+                const Duration(seconds: 30),
+                onTimeout: () {
+                  throw const TimeoutException();
+                },
+              );
+          break;
         case 'DEL':
-          final responseJson = await http.delete(
-            Uri.parse(BaseUrls.api.url + endPoint.url + params),
-            headers: getHeaders(),
-          );
-          return responseJson;
+          response = await http
+              .delete(
+                Uri.parse(BaseUrls.api.url + endPoint.url + params),
+                headers: getHeaders(),
+              )
+              .timeout(
+                const Duration(seconds: 30),
+                onTimeout: () {
+                  throw const TimeoutException();
+                },
+              );
+          break;
         case 'MULTIPART':
           final request = http.MultipartRequest(
             'POST',
@@ -63,26 +93,53 @@ class ApiBaseHelper {
             await http.MultipartFile.fromPath('image', imagePath!),
           );
           request.headers.addAll(getHeaders());
-          final responseJson = await request.send();
-          return responseJson;
+          streamedResponse = await request.send().timeout(
+            const Duration(seconds: 60),
+            onTimeout: () {
+              throw const TimeoutException();
+            },
+          );
+          // Convert StreamedResponse to Response for consistency
+          response = await http.Response.fromStream(streamedResponse);
+          break;
         default:
-          throw Exception('Unsupported request type: $requestType');
+          throw UnknownException(
+            message: 'Unsupported request type: $requestType',
+            code: 'UNSUPPORTED_REQUEST_TYPE',
+          );
       }
-    } on SocketException {
-      EasyLoading.showError('No Internet Connection');
-      rethrow;
-    } on HttpException {
-      EasyLoading.showError('No Internet Connection');
-      rethrow;
-    } on FormatException {
-      EasyLoading.showError('Invalid Format');
-      rethrow;
-    } on TimeoutException {
-      EasyLoading.showError('Request TimeOut');
+
+      // Check HTTP status code and throw appropriate exception if error
+      if (response.statusCode >= 400) {
+        throw ErrorHandler.handleHttpResponse(
+          response.statusCode,
+          responseBody: response.body,
+        );
+      }
+
+      return response;
+    } on io.SocketException catch (e) {
+      throw NetworkException(originalError: e);
+    } on io.HttpException catch (e) {
+      // This is Dart's built-in HttpException, convert to our NetworkException
+      throw NetworkException(
+        message: 'Network error occurred. Please try again.',
+        originalError: e,
+      );
+    } on FormatException catch (e) {
+      // Dart's built-in FormatException
+      throw FormatException(originalError: e);
+    } on TimeoutException catch (e) {
+      // Dart's built-in TimeoutException
+      throw TimeoutException(originalError: e);
+    } on AppException {
+      // Re-throw AppException as-is (ErrorHandler will handle it in the service layer)
       rethrow;
     } catch (e) {
-      EasyLoading.showError(e.toString());
-      rethrow;
+      throw UnknownException(
+        message: 'An unexpected error occurred: ${e.toString()}',
+        originalError: e,
+      );
     }
   }
 

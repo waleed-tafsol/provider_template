@@ -1,10 +1,13 @@
-import 'dart:async';
 import 'dart:convert';
+
 import 'package:provider_sample_app/repositories/auth_repository.dart';
+import 'package:provider_sample_app/utils/secure_storage_service.dart';
+
+import '../exceptions/app_exception.dart';
 import '../models/requests/sign_in_request.dart';
 import '../models/responses/auth_response.dart';
 import '../utils/enums.dart';
-import '../utils/secure_storage_service.dart';
+import '../utils/error_handler.dart';
 import 'api_base_helper.dart';
 
 class AuthService implements AuthRepository {
@@ -23,28 +26,25 @@ class AuthService implements AuthRepository {
         params: '',
       );
 
-      // Check HTTP status code
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        final parsed = json.decode(response.body);
-        AuthResponse authResponse = AuthResponse.fromJson(parsed);
-        if (authResponse.isSuccess == true) {
-          _secureStorage.saveSecureString(
-            key: '',
-            value: authResponse.data?.clientToken ?? '',
-          );
-        }
-        return authResponse;
-      } else {
-        // Handle HTTP error status codes
-        final parsed = json.decode(response.body);
-        return AuthResponse.fromJson(parsed);
+      // Parse response
+      final parsed = json.decode(response.body);
+      final AuthResponse authResponse = AuthResponse.fromJson(parsed);
+
+      // Save token if successful
+      if (authResponse.isSuccess == true &&
+          authResponse.data?.clientToken != null) {
+      //  await _secureStorage.saveAuthToken(authResponse.data!.clientToken!);
       }
+
+      return authResponse;
+    } on AppException catch (e) {
+      // Handle known exceptions - convert to error message (no UI display here)
+      final errorMessage = ErrorHandler.handleException(e);
+      return AuthResponse(isSuccess: false, message: errorMessage);
     } catch (e) {
-      // Return error response on exception
-      return AuthResponse(
-        isSuccess: false,
-        message: 'An error occurred. Please try again.',
-      );
+      // Handle unknown exceptions - convert to error message (no UI display here)
+      final errorMessage = ErrorHandler.handleException(e);
+      return AuthResponse(isSuccess: false, message: errorMessage);
     }
   }
 }

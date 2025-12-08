@@ -5,6 +5,7 @@ import 'package:provider_sample_app/repositories/auth_repository.dart';
 
 import '../models/requests/sign_in_request.dart';
 import '../models/responses/auth_response.dart';
+import '../utils/error_handler.dart';
 
 class AuthViewModel extends ChangeNotifier {
   AuthViewModel({required AuthRepository authRepository})
@@ -52,13 +53,10 @@ class AuthViewModel extends ChangeNotifier {
 
       return response.isSuccess == true;
     } catch (e) {
-      // Set error response
-      setAuthResponse(
-        AuthResponse(
-          isSuccess: false,
-          message: 'An unexpected error occurred. Please try again.',
-        ),
-      );
+      // Handle unexpected exceptions (should rarely happen since service handles exceptions)
+      // Convert exception to error message (no UI display here - UI layer will handle it)
+      final errorMessage = ErrorHandler.handleException(e);
+      setAuthResponse(AuthResponse(isSuccess: false, message: errorMessage));
       setLoading(false);
       return false;
     }
