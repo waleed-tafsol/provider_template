@@ -1,9 +1,10 @@
-import '../../core/entities/auth_result.dart';
-import '../../core/entities/sign_in_params.dart';
-import '../../core/repositories/auth_repository.dart';
-import '../../core/exceptions/app_exception.dart';
-import '../data_sources/auth_remote_data_source.dart';
+import '../../domain/entities/auth_result.dart';
+import '../../domain/entities/sign_in_params.dart';
+import '../../domain/repositories/auth_repository.dart';
+import '../../domain/exceptions/app_exception.dart';
+import '../data_sources/remote/auth_remote_data_source.dart';
 import '../models/sign_in_request_dto.dart';
+import '../mappers/auth_mapper.dart';
 
 /// Repository implementation - Data layer
 class AuthRepositoryImpl implements AuthRepository {
@@ -22,17 +23,7 @@ class AuthRepositoryImpl implements AuthRepository {
       );
 
       final responseDto = await _remoteDataSource.signIn(requestDto);
-
-      if (responseDto.isSuccess && responseDto.data != null) {
-        return AuthResult.success(
-          user: responseDto.data!.toDomain(),
-          message: responseDto.message,
-        );
-      } else {
-        return AuthResult.failure(
-          message: responseDto.message ?? 'Sign in failed',
-        );
-      }
+      return AuthMapper.toAuthResult(responseDto);
     } on AppException catch (e) {
       return AuthResult.failure(message: e.message);
     } catch (e) {

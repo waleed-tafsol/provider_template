@@ -1,0 +1,117 @@
+# 📁 Clean Architecture Folder Structure
+
+## ✅ Folder Naming Convention
+
+Your project now follows **Clean Architecture** naming conventions:
+
+```
+lib/
+├── domain/          # Domain Layer (Business Logic)
+├── data/            # Data Layer (Implementation)
+└── presentation/    # Presentation Layer (UI)
+```
+
+---
+
+## 📂 Complete Structure
+
+```
+lib/
+├── domain/                          # 🎯 Domain Layer
+│   ├── entities/                   # Pure business objects
+│   │   ├── auth_result.dart
+│   │   ├── sign_in_params.dart
+│   │   └── user.dart
+│   ├── repositories/               # Repository interfaces
+│   │   └── auth_repository.dart
+│   ├── use_cases/                  # Business logic operations
+│   │   └── sign_in_use_case.dart
+│   ├── errors/                     # Domain errors
+│   │   └── failures.dart
+│   └── exceptions/                 # Application exceptions
+│       └── app_exception.dart
+│
+├── data/                           # 📦 Data Layer
+│   ├── data_sources/              # Remote/Local data sources
+│   │   └── auth_remote_data_source.dart
+│   ├── models/                    # DTOs (Data Transfer Objects)
+│   │   ├── auth_response_dto.dart
+│   │   ├── sign_in_request_dto.dart
+│   │   └── base_response_dto.dart
+│   ├── repositories/              # Repository implementations
+│   │   └── auth_repository_impl.dart
+│   └── network/                   # Network layer
+│       └── api_client.dart
+│
+├── presentation/                   # 🎨 Presentation Layer
+│   ├── screens/                   # UI screens
+│   │   ├── login_screen.dart
+│   │   ├── splash_screen.dart
+│   │   └── home_screen.dart
+│   └── view_models/               # State management
+│       ├── auth_view_model.dart
+│       └── theme_view_model.dart
+│
+├── utils/                          # 🔧 Shared utilities
+│   ├── enums.dart
+│   ├── error_handler.dart
+│   ├── logger_service.dart
+│   ├── secure_storage_service.dart
+│   └── ...
+│
+├── app_init.dart
+├── main.dart
+└── route_generator.dart
+```
+
+---
+
+## 🎯 Layer Responsibilities
+
+### 1. **Domain Layer** (`domain/`)
+- **Purpose**: Pure business logic, independent of frameworks
+- **Contains**:
+  - Entities (business objects)
+  - Use cases (business operations)
+  - Repository interfaces (contracts)
+  - Exceptions and errors
+- **Rules**: No Flutter dependencies, pure Dart code
+
+### 2. **Data Layer** (`data/`)
+- **Purpose**: Data access and transformations
+- **Contains**:
+  - Data sources (remote/local)
+  - DTOs (Data Transfer Objects)
+  - Repository implementations
+  - Network client
+- **Rules**: Implements domain interfaces, maps DTOs to entities
+
+### 3. **Presentation Layer** (`presentation/`)
+- **Purpose**: UI and state management
+- **Contains**:
+  - Screens (UI widgets)
+  - ViewModels (state management)
+- **Rules**: Depends on domain layer, uses use cases
+
+---
+
+## ✅ Verification
+
+- ✅ Folder renamed from `core` to `domain`
+- ✅ All imports updated
+- ✅ No linter errors
+- ✅ Flutter analyze passes
+- ✅ Structure follows Clean Architecture conventions
+
+---
+
+## 📝 Summary
+
+Your project now uses **standard Clean Architecture folder naming**:
+
+- ✅ **`domain/`** - Domain Layer (was `core/`)
+- ✅ **`data/`** - Data Layer
+- ✅ **`presentation/`** - Presentation Layer
+
+**All imports have been updated and verified!** 🚀
+

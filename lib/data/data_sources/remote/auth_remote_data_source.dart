@@ -1,9 +1,9 @@
-import '../models/auth_response_dto.dart';
-import '../models/sign_in_request_dto.dart';
-import '../../core/exceptions/app_exception.dart';
-import '../../utils/enums.dart';
-import '../../utils/secure_storage_service.dart';
-import '../network/api_client.dart';
+import '../../models/auth_response_dto.dart';
+import '../../models/sign_in_request_dto.dart';
+import '../../../domain/exceptions/app_exception.dart';
+import '../../../core/constants/enums.dart';
+import '../../../core/storage/secure_storage_service.dart';
+import '../../network/api_client.dart';
 
 /// Remote data source - Handles API calls
 abstract class AuthRemoteDataSource {

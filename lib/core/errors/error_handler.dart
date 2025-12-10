@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import '../core/exceptions/app_exception.dart';
-import 'logger_service.dart';
+import '../../domain/exceptions/app_exception.dart';
+import '../logging/logger_service.dart';
 
 /// Centralized error handler for the application
 /// Note: This handler does NOT display UI elements. Errors should be displayed in the UI layer.

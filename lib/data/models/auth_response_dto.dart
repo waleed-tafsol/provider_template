@@ -1,4 +1,3 @@
-import '../../core/entities/user.dart';
 import 'base_response_dto.dart';
 
 /// Data Transfer Object (DTO) - Maps API response to domain entities
@@ -79,18 +78,5 @@ class AuthDataDto {
     };
   }
 
-  /// Maps DTO to domain entity
-  User toDomain() {
-    return User(
-      id: id ?? '',
-      fullName: fullName,
-      email: email,
-      phoneNumber: phoneNumber,
-      isVerified: isVerified,
-      isGuest: isGuest,
-      refreshToken: refreshToken,
-      clientToken: clientToken,
-    );
-  }
 }
 

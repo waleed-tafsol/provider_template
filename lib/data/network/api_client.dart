@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
-import '../../core/exceptions/app_exception.dart';
-import '../../utils/enums.dart';
-import '../../utils/secure_storage_service.dart';
-import '../../utils/error_handler.dart';
+import '../../domain/exceptions/app_exception.dart';
+import '../../core/constants/enums.dart';
+import '../../core/storage/secure_storage_service.dart';
+import '../../core/errors/error_handler.dart';
 
 /// API Client - Handles HTTP requests
 class ApiClient {

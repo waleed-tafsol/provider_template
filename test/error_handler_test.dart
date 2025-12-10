@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provider_sample_app/core/exceptions/app_exception.dart';
-import 'package:provider_sample_app/utils/error_handler.dart';
+import 'package:provider_sample_app/core/errors/error_handler.dart';
+import 'package:provider_sample_app/domain/exceptions/app_exception.dart';
 
 void main() {
   group('ErrorHandler.handleException', () {

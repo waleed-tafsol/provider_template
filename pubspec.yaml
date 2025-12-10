@@ -36,12 +36,12 @@ dependencies:
   cupertino_icons: ^1.0.8
   google_fonts: ^6.3.3
   flutter_screenutil: ^5.9.3
-  shared_preferences: ^2.5.3
+  shared_preferences: ^2.5.4
   flutter_easyloading: ^3.0.5
   provider: ^6.1.5+1
   http: ^1.6.0
   flutter_secure_storage: ^9.2.4
-  logger: ^2.4.0
+  logger: ^2.6.2
 
 dev_dependencies:
   flutter_test:

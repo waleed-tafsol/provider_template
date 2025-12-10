@@ -3,17 +3,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_sample_app/app_init.dart';
-import 'package:provider_sample_app/core/repositories/auth_repository.dart';
-import 'package:provider_sample_app/core/use_cases/sign_in_use_case.dart';
-import 'package:provider_sample_app/data/data_sources/auth_remote_data_source.dart';
+import 'package:provider_sample_app/domain/repositories/auth_repository.dart';
+import 'package:provider_sample_app/domain/use_cases/sign_in_use_case.dart';
+import 'package:provider_sample_app/data/data_sources/remote/auth_remote_data_source.dart';
 import 'package:provider_sample_app/data/network/api_client.dart';
 import 'package:provider_sample_app/data/repositories/auth_repository_impl.dart';
 import 'package:provider_sample_app/presentation/view_models/auth_view_model.dart';
-import 'package:provider_sample_app/utils/shared_pref.dart';
+import 'package:provider_sample_app/core/storage/shared_pref.dart';
 import 'package:provider_sample_app/presentation/view_models/theme_view_model.dart';
 
-import 'utils/secure_storage_service.dart';
-import 'utils/logger_service.dart';
+import 'core/storage/secure_storage_service.dart';
+import 'core/logging/logger_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

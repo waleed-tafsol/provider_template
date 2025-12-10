@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 
-import '../../core/entities/sign_in_params.dart';
-import '../../core/use_cases/sign_in_use_case.dart';
+import '../../domain/entities/sign_in_params.dart';
+import '../../domain/use_cases/sign_in_use_case.dart';
 
 /// Presentation layer - ViewModel (UI state management)
 class AuthViewModel extends ChangeNotifier {
